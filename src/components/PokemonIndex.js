@@ -11,7 +11,7 @@ class PokemonPage extends React.Component {
 
     this.state= {
       pokemon: [],
-      search: []
+      search: ''
     }
   }
 
@@ -27,13 +27,11 @@ class PokemonPage extends React.Component {
   }
 
   searchPoke = (e) => {
-    let array = []
-    this.state.pokemon.forEach(pokemon => (pokemon.name.includes(e.target.value)) ? array.push(pokemon) : null)
-    this.setState({search: array})
+    this.setState({search: e.target.value})    
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/pokemon`).then(res => res.json()).then(res => this.setState({pokemon: res, search: res}))
+    fetch(`http://localhost:3000/pokemon`).then(res => res.json()).then(res => this.setState({pokemon: res}))
   }
 
   render() {
@@ -45,7 +43,7 @@ class PokemonPage extends React.Component {
         <br />
         <Search onChange={this.searchPoke} />
         <br />
-        <PokemonCollection pokemon={this.state.search}/>
+        <PokemonCollection pokemon={this.state.pokemon.filter(poke => poke.name.includes(this.state.search))}/>
       </Container>
     )
   }
